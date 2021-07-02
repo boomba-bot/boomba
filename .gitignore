@@ -27,4 +27,4 @@ twitchcord-*.tar
 
 .elixir_ls/
 
-config/dev.exs
+config/*.secrets.exs
