@@ -7,7 +7,15 @@ defmodule Twitchcord.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      dialyzer: dialyzer()
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_core_path: "priv/plts",
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end
 
@@ -22,9 +30,10 @@ defmodule Twitchcord.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:alchemy, "~> 0.7.0", hex: :discord_alchemy}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:alchemy, "~> 0.7.0", hex: :discord_alchemy},
+      {:httpoison, "~> 1.8"},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 end

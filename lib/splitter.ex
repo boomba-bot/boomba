@@ -1,4 +1,7 @@
 defmodule Twitchcord.Parser.Splitter do
+  @moduledoc """
+  Gives start and end positions of variables in a reply
+  """
   use GenServer
 
   ## Client API
@@ -18,7 +21,7 @@ defmodule Twitchcord.Parser.Splitter do
   ## Server Callbacks
 
   def init(:ok) do
-    {:ok, %{ debt: 0, index: 0 }}
+    {:ok, %{debt: 0, index: 0}}
   end
 
   def handle_call(:state, _from, state) do

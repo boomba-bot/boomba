@@ -28,3 +28,4 @@ twitchcord-*.tar
 .elixir_ls/
 
 config/*.secrets.exs
+.vscode/launch.json
