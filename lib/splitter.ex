@@ -1,4 +1,4 @@
-defmodule Twitchcord.Parser.Splitter do
+defmodule Boomba.Parser.Splitter do
   @moduledoc """
   Gives start and end positions of variables in a reply
   """

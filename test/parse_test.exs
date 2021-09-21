@@ -1,7 +1,7 @@
-defmodule TwitchcordTest.Parser do
+defmodule BoombaTest.Parser do
   use ExUnit.Case
-  alias Twitchcord.Parser
-  doctest(Twitchcord)
+  alias Boomba.Parser
+  doctest(Boomba)
 
   setup_all do
     {:ok, %{message: %{author: %{id: "168706817348730881"}, content: "!command arg1 arg2 arg2"}}}

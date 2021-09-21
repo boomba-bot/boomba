@@ -1,8 +1,8 @@
-defmodule Twitchcord.Parser do
+defmodule Boomba.Parser do
   @moduledoc """
   Parses stream element commands
   """
-  alias Twitchcord.Parser.Splitter
+  alias Boomba.Parser.Splitter
 
   @spec parse(message :: any(), command :: any()) :: {:ok, String.t()}
   def parse(message, command) do

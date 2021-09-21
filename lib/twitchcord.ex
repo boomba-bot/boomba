@@ -1,4 +1,4 @@
-defmodule Twitchcord do
+defmodule Boomba do
   @moduledoc """
   Application Supervisor
   """
@@ -7,7 +7,7 @@ defmodule Twitchcord do
 
   def start(_type, _args) do
     children = [
-      Twitchcord.StreamElements
+      Boomba.StreamElements
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)
@@ -15,9 +15,9 @@ defmodule Twitchcord do
   end
 
   def alchemy do
-    token = Application.fetch_env!(:twitchcord, :token)
+    token = Application.fetch_env!(:boomba, :token)
     run = Client.start(token)
-    use Twitchcord.Events
+    use Boomba.Events
     run
   end
 end

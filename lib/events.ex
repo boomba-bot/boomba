@@ -1,4 +1,4 @@
-defmodule Twitchcord.Events do
+defmodule Boomba.Events do
   @moduledoc """
   Handles Alchemy Discord events
   """
@@ -35,7 +35,7 @@ defmodule Twitchcord.Events do
   end
 
   def get_reply({:ok, command}, message) do
-    Twitchcord.Parser.parse(message, command)
+    Boomba.Parser.parse(message, command)
   end
 
   def get_reply({:error, _} = err, _message) do
@@ -48,7 +48,7 @@ defmodule Twitchcord.Events do
 
   def get_guild_commands(message) do
     {:ok, guild_id} = guild_for_message(message)
-    Twitchcord.StreamElements.get_commands(guild_id)
+    Boomba.StreamElements.get_commands(guild_id)
   end
 
   def command_from_message({:ok, commands}, message) do

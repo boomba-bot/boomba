@@ -1,6 +1,6 @@
-defmodule TwitchcordTest.Parser.Splitter do
+defmodule BoombaTest.Parser.Splitter do
   use ExUnit.Case
-  alias Twitchcord.Parser.Splitter
+  alias Boomba.Parser.Splitter
 
   setup do
     {:ok, pid} = Splitter.start_link()

@@ -1,4 +1,4 @@
-defmodule Twitchcord.StreamElements do
+defmodule Boomba.StreamElements do
   require IEx
 
   @moduledoc """
@@ -46,7 +46,7 @@ defmodule Twitchcord.StreamElements do
   ## Helper functions
 
   defp get_commands_from_api(guild_id) do
-    token = Application.fetch_env!(:twitchcord, :se_token)
+    token = Application.fetch_env!(:boomba, :se_token)
     headers = [Authorization: "Bearer #{token}"]
 
     case get_url(guild_id) do
