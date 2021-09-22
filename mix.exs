@@ -30,7 +30,7 @@ defmodule Boomba.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:alchemy, "~> 0.7.0", hex: :discord_alchemy},
+      {:alchemy, git: "https://github.com/xunafay/alchemy.git", branch: "emoji-animated"},
       {:httpoison, "~> 1.8"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
