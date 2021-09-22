@@ -16,12 +16,12 @@ defmodule Boomba.Parser do
 
   defp get_points(string) do
     (Regex.scan(~r/\${/, string, return: :index) ++
-       Regex.scan(~r/}/, string, return: :index))
+      Regex.scan(~r/}/, string, return: :index))
     |> Enum.map(&hd(&1))
     |> Enum.sort_by(&elem(&1, 0))
   end
 
-  @spec get_parts(string :: String.t()) :: List
+  @spec get_parts(string :: binary()) :: list(binary())
   defp get_parts(string) when is_binary(string) do
     {:ok, splitter} = Splitter.start_link()
 

@@ -7,7 +7,12 @@ defmodule BoombaTest.StreamElements do
   end
 
   test "get commands from api" do
-    {:ok, commands} = Boomba.StreamElements.get_commands("406167664596090883")
-    assert is_list(commands)
+    {:ok, commands} =
+    case Boomba.StreamElements.get_commands("406167664596090883") do
+      {:ok, commands} ->
+        assert is_list(commands)
+      {:error, error} ->
+        flunk(error)
+    end
   end
 end

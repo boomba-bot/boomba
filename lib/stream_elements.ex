@@ -50,7 +50,7 @@ defmodule Boomba.StreamElements do
     headers = [Authorization: "Bearer #{token}"]
 
     case get_url(guild_id) do
-      :error -> :error
+      {:error, reason} -> {:error, reason}
       url -> HTTPoison.get(url, headers) |> parse_response()
     end
   end
@@ -63,12 +63,12 @@ defmodule Boomba.StreamElements do
     :notfound
   end
 
-  defp parse_response({:ok, _response}) do
-    :error
+  defp parse_response({:ok, response}) do
+    {:error, response.status_code}
   end
 
-  defp parse_response({:error, _reason}) do
-    :error
+  defp parse_response({:error, reason}) do
+    {:error, reason}
   end
 
   defp get_url(guild_id) do
@@ -77,7 +77,7 @@ defmodule Boomba.StreamElements do
         "https://api.streamelements.com/kappa/v2/bot/commands/#{value}"
 
       :error ->
-        :error
+        {:error, "stream elements id not found"}
     end
   end
 
