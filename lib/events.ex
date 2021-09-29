@@ -16,10 +16,12 @@ defmodule Boomba.Events do
     get_guild_commands(message)
     |> command_from_message(message)
     |> get_reply(message)
+    |> emojify(message)
     |> send_message(message.channel_id)
   end
 
   def send_message({:ok, content}, channel_id) do
+    IO.puts(content)
     Alchemy.Client.send_message(
       channel_id,
       content
@@ -39,6 +41,15 @@ defmodule Boomba.Events do
   end
 
   def get_reply({:error, _} = err, _message) do
+    err
+  end
+
+  def emojify({:ok, reply}, message) do
+    {:ok, guild_id} = guild_for_message(message)
+    {:ok, Boomba.Emojis.emojify(reply, guild_id)}
+  end
+
+  def emojify({:error, _} = err, _message) do
     err
   end
 
