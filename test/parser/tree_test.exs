@@ -12,7 +12,7 @@ defmodule BoombaTest.Parser.Tree do
   end
 
   test "adjacent variables" do
-    assert [{"leading ", " trailing"}, {"var1"}, {" var2"}] == Tree.build("leading ${var1} ${var2} trailing")
+    assert [{"leading "}, {"var1"}, {" ", " trailing"}, {"var2"}] == Tree.build("leading ${var1} ${var2} trailing")
   end
 
   test "nested variables" do

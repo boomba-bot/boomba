@@ -4,17 +4,54 @@ defmodule Boomba.Parser.Tree do
   defstruct [:parent, :self, :children]
 
   def build(message) when is_binary(message) do
-    first = Regex.scan(~r/\${/, message, return: :index) |> List.first()
-    last = Regex.scan(~r/}/, message, return: :index) |> List.last()
+    opening_brackets = Regex.scan(~r/\${/, message, return: :index)
+    closing_brackets = Regex.scan(~r/}/, message, return: :index)
 
-    if first != nil and last != nil do
-      {child, trailing} = String.split_at(message, (List.last(last) |> elem(0)) + 1)
+    brackets = Enum.sort(opening_brackets ++ closing_brackets, &(elem(List.first(&1), 0) < elem(List.first(&2), 0)))
+
+    closing_index = closing_calc(brackets, 0)
+    opening_index = opening_brackets |> Enum.at(0, [{nil}]) |> List.first() |> elem(0)
+
+    if opening_index != nil and closing_index != nil do
+      {child, trailing} = String.split_at(message, closing_index + 1)
       child = String.replace_suffix(child, "}", "")
-      {leading, child} = String.split_at(child, (List.first(first) |> elem(0)) + 2)
+      {leading, child} = String.split_at(child, opening_index + 2)
       leading = String.replace_suffix(leading, "${", "")
-      [{leading, trailing} | build(child)]
+      case build(trailing) do
+        [{trailing}] -> [{leading, trailing} | build(child)]
+        split -> [{leading}] ++ build(child) ++ split
+      end
     else
       [{message}]
     end
+  end
+
+  defp closing_calc([[{_, 1}] | remaining], 0) do
+    closing_calc(remaining, 0)
+  end
+
+  defp closing_calc([[{index, 1}] | _], 1) do
+    index
+  end
+
+  defp closing_calc([[{index, 1}]], 1) do
+    index
+  end
+
+  defp closing_calc([[{_, 1}] | remaining], debt) do
+    closing_calc(remaining, debt - 1)
+  end
+
+  defp closing_calc([[{_, 2}] | remaining], debt) do
+    closing_calc(remaining, debt + 1)
+  end
+
+
+  defp closing_calc([[{_, _}]], _) do
+    nil
+  end
+
+  defp closing_calc([], _) do
+    nil
   end
 end
