@@ -33,6 +33,12 @@
   description: This will not be worked on
 - name: 'type: bug'
   color: d73a4a
+- name: 'service: streamelements'
+  color: 020923
+- name: 'service: nightbot'
+  color: 2f4050
+- name: 'service: twitch'
+  color: 6441A4
   description: Something isn't working
 - name: 'type: discussion'
   color: d4c5f9
