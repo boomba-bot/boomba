@@ -22,5 +22,6 @@ defmodule BoombaTest.Parser.Tree do
   end
 
   test "nested adjacent variables" do
+    assert [{"leading "}, {"var1 ", ""}, {"nested"}, {" ", " trailing"}, {"var2"}] == Tree.build("leading ${var1 ${nested}} ${var2} trailing")
   end
 end
