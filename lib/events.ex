@@ -37,7 +37,8 @@ defmodule Boomba.Events do
   end
 
   def get_reply({:ok, command}, message) do
-    Boomba.Parser.parse(message, command)
+    reply = Boomba.Parser.Tree.build(Map.get(command, "reply")) |> Boomba.Parser.Tree.collapse_tree(message, command)
+    {:ok, reply}
   end
 
   def get_reply({:error, _} = err, _message) do
