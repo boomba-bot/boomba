@@ -15,9 +15,21 @@ defmodule Boomba.Events do
   def parse_message(message) do
     get_guild_commands(message)
     |> command_from_message(message)
+    |> cooldown(message)
     |> get_reply(message)
     |> emojify(message)
     |> send_message(message.channel_id)
+  end
+
+  def cooldown({:ok, command}, message) do
+    case Boomba.Cooldown.execute(command, message.author.id) do
+      :ok -> {:ok, command}
+      _ -> {:error, "commnad is on cooldown"}
+    end
+  end
+
+  def cooldown({:error, _reason} = err, _message) do
+    err
   end
 
   def send_message({:ok, content}, channel_id) do
@@ -29,7 +41,7 @@ defmodule Boomba.Events do
   end
 
   def send_message({:error, _} = err, _message) do
-    err
+    IO.inspect(err)
   end
 
   def is_command(content) do
@@ -37,7 +49,7 @@ defmodule Boomba.Events do
   end
 
   def get_reply({:ok, command}, message) do
-    reply = Boomba.Parser.Tree.build(Map.get(command, "reply")) |> Boomba.Parser.Tree.collapse_tree(message, command)
+    reply = Boomba.Parser.Tree.build(command.reply) |> Boomba.Parser.Tree.collapse_tree(message, command)
     {:ok, reply}
   end
 
@@ -65,7 +77,7 @@ defmodule Boomba.Events do
 
   def command_from_message({:ok, commands}, message) do
     word = message.content |> String.split(" ") |> hd() |> String.replace_prefix("!", "")
-    case Enum.find(commands, fn cmd -> word == Map.get(cmd, "command") end) do
+    case Enum.find(commands, fn cmd -> word == cmd.command end) do
       nil -> {:error, %{reason: "not found"}}
       cmd -> {:ok, cmd}
     end
