@@ -1,6 +1,6 @@
 defmodule Boomba.StreamElements do
   require IEx
-
+  alias Boomba.StreamElements.Command
   @moduledoc """
   Get commands and other stream elements data for a guild
   """
@@ -56,7 +56,7 @@ defmodule Boomba.StreamElements do
   end
 
   defp parse_response({:ok, %HTTPoison.Response{status_code: 200, body: body}}) do
-    body |> Poison.decode!()
+    body |> Poison.decode!(as: [%Command{cooldown: %Command.Cooldown{}}])
   end
 
   defp parse_response({:ok, %HTTPoison.Response{status_code: 404}}) do
