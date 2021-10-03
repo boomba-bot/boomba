@@ -1,13 +1,13 @@
 defmodule Boomba.Parser.Variables do
-  def variable("sender", message, _command) do
+  def variable("sender", message) do
     "<@" <> message.author.id <> ">"
   end
 
-  def variable("source", message, _command) do
+  def variable("source", message) do
     "<@" <> message.author.id <> ">"
   end
 
-  def variable("random.pick " <> options, _message, _command) do
+  def variable("random.pick " <> options, _message) do
     options
     |> String.split(" ")
     |> Enum.random()
@@ -17,22 +17,22 @@ defmodule Boomba.Parser.Variables do
     |> String.replace_suffix("\"", "")
   end
 
-  def variable("random." <> range, _message, _command) do
+  def variable("random." <> range, _message) do
     [lower, upper] =
       range |> String.trim() |> (&Regex.split(~r{-}, &1)).() |> Enum.map(&String.to_integer(&1))
 
-    Enum.random(lower..upper)
+    Enum.random(lower..upper) |> Integer.to_string()
   end
 
-  def variable("queryescape " <> content, _message, _command) do
+  def variable("queryescape " <> content, _message) do
     content |> URI.encode()
   end
 
-  def variable("args", message, _command) do
-    message.content |> String.split() |> tl() |> Enum.random()
+  def variable("pathescape" <> content, _message) do
+    content |> URI.encode_www_form()
   end
 
-  def variable("repeat " <> content, _message, _command) do
+  def variable("repeat " <> content, _message) do
     times = content |> String.split(" ") |> hd() |> String.to_integer()
 
     content
@@ -43,23 +43,27 @@ defmodule Boomba.Parser.Variables do
     |> String.trim()
   end
 
-  def variable("args.word", _message, _command) do
-    :notimplemented
+  def variable("args", _message) do
+    "args"
   end
 
-  def variable("args.emote", _message, _command) do
-    :notimplemented
+  def variable("args.word", _message) do
+    "args.word"
   end
 
-  def variable("count" <> _opts, _message, _command) do
-    :notimplemented
+  def variable("args.emote", _message) do
+    "args.emote"
   end
 
-  def variable("getcount" <> _opts, _message, _command) do
-    :notimplemented
+  def variable("count" <> _opts, _message) do
+    "count"
   end
 
-  def variable(content, _message, _command) do
+  def variable("getcount" <> _opts, _message) do
+    "count"
+  end
+
+  def variable(content, _message) do
     content
   end
 end
