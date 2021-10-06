@@ -7,6 +7,14 @@ defmodule Boomba.Parser.Variables do
     "<@" <> message.author.id <> ">"
   end
 
+  def variable("user", message) do
+    message.author.username
+  end
+
+  def variable("user.name", message) do
+    message.author.username
+  end
+
   def variable("random.pick " <> options, _message) do
     options
     |> String.split(" ")
