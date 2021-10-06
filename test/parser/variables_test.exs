@@ -4,7 +4,7 @@ defmodule BoombaTest.Parser.Variables do
   doctest(Boomba.Parser.Variables)
 
   setup_all do
-    {:ok, %{message: %{author: %{id: "168706817348730881"}}, content: "!cmd arg1 arg2 arg3"}}
+    {:ok, %{message: %{author: %{id: "168706817348730881"}, content: "!cmd arg1 arg2 arg3"}}}
   end
 
   test "sender/source", state do
@@ -32,5 +32,15 @@ defmodule BoombaTest.Parser.Variables do
   test "repeat", state do
     reply = Variables.variable("repeat 3 test something ", state.message)
     assert reply == "test something test something test something"
+  end
+
+  test "touser with args", state do
+    reply = Variables.variable("touser", state.message)
+    assert reply == state.message.content |> String.split(" ") |> Enum.at(1)
+  end
+
+  test "touser without args", state do
+    reply = Variables.variable("touser", %{author: %{id: "user_id"}, content: "!cmd"})
+    assert reply == "<@user_id>"
   end
 end

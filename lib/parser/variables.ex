@@ -15,6 +15,15 @@ defmodule Boomba.Parser.Variables do
     message.author.username
   end
 
+  def variable("touser", message) do
+    case message.content
+    |> String.split(" ")
+    |> Enum.at(1) do
+      nil -> "<@#{message.author.id}>"
+      content -> content
+    end
+  end
+
   def variable("random.pick " <> options, _message) do
     options
     |> String.split(" ")
