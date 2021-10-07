@@ -1,4 +1,5 @@
 defmodule Boomba.Parser.Tree do
+  @moduledoc false
   alias Boomba.Parser.Variables
 
   def build(message) when is_binary(message) do

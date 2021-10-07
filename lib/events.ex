@@ -3,8 +3,11 @@ defmodule Boomba.Events do
   Handles Alchemy Discord events
   """
   use Alchemy.Events
+  require Logger
+  alias Boomba.Parser.Tree
 
   Events.on_message(:on_message)
+
   def on_message(message) do
     if is_command(message.content) do
       parse_message(message)
@@ -15,13 +18,26 @@ defmodule Boomba.Events do
   def parse_message(message) do
     get_guild_commands(message)
     |> command_from_message(message)
+    |> cooldown(message)
     |> get_reply(message)
     |> emojify(message)
     |> send_message(message.channel_id)
   end
 
+  def cooldown({:ok, command}, message) do
+    case Boomba.Cooldown.execute(command, message.author.id) do
+      :ok -> {:ok, command}
+      _ -> {:error, "commnad is on cooldown"}
+    end
+  end
+
+  def cooldown({:error, _reason} = err, _message) do
+    err
+  end
+
   def send_message({:ok, content}, channel_id) do
-    IO.puts(content)
+    Logger.debug("sending message: #{content}")
+
     Alchemy.Client.send_message(
       channel_id,
       content
@@ -29,6 +45,7 @@ defmodule Boomba.Events do
   end
 
   def send_message({:error, _} = err, _message) do
+    Logger.error("error parsing message: #{inspect(err)}")
     err
   end
 
@@ -37,7 +54,10 @@ defmodule Boomba.Events do
   end
 
   def get_reply({:ok, command}, message) do
-    reply = Boomba.Parser.Tree.build(Map.get(command, "reply")) |> Boomba.Parser.Tree.collapse_tree(message, command)
+    reply =
+      Tree.build(command.reply)
+      |> Tree.collapse_tree(message, command)
+
     {:ok, reply}
   end
 
@@ -65,7 +85,8 @@ defmodule Boomba.Events do
 
   def command_from_message({:ok, commands}, message) do
     word = message.content |> String.split(" ") |> hd() |> String.replace_prefix("!", "")
-    case Enum.find(commands, fn cmd -> word == Map.get(cmd, "command") end) do
+
+    case Enum.find(commands, fn cmd -> word == cmd.command end) do
       nil -> {:error, %{reason: "not found"}}
       cmd -> {:ok, cmd}
     end

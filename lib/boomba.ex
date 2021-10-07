@@ -3,11 +3,11 @@ defmodule Boomba do
   Application Supervisor
   """
   use Application
-  alias Alchemy.Client
 
   def start(_type, _args) do
     children = [
-      Boomba.StreamElements
+      Boomba.StreamElements,
+      Boomba.Cooldown
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)
@@ -16,7 +16,7 @@ defmodule Boomba do
 
   def alchemy do
     token = Application.fetch_env!(:boomba, :token)
-    run = Client.start(token)
+    run = Alchemy.Client.start(token)
     use Boomba.Events
     run
   end

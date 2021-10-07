@@ -33,7 +33,7 @@ defmodule Boomba.MixProject do
       {:alchemy, git: "https://github.com/boomba-bot/alchemy.git", branch: "master"},
       {:httpoison, "~> 1.8"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
 end
