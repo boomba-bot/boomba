@@ -24,7 +24,9 @@ jobs:
         uses: actions/cache@v2
         id: mix-cache
         with:
-          path: deps
+          path: |
+            deps
+            _build
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
       - name: Install dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
