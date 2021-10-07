@@ -16,7 +16,7 @@ defmodule Boomba.StreamElements do
 
   @spec get_commands(guild_id :: String.t()) :: {:ok, List} | :error
   def get_commands(guild_id) do
-    GenServer.call(__MODULE__, {:get_commands, guild_id}, 20000)
+    GenServer.call(__MODULE__, {:get_commands, guild_id}, 20_000)
   end
 
   ## Server callbacks

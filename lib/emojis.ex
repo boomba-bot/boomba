@@ -1,4 +1,5 @@
 defmodule Boomba.Emojis do
+  @moduledoc false
   def emojify(message, guild_id) do
     {:ok, guild} = Alchemy.Cache.guild(guild_id)
 

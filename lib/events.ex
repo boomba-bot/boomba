@@ -3,6 +3,8 @@ defmodule Boomba.Events do
   Handles Alchemy Discord events
   """
   use Alchemy.Events
+  require Logger
+  alias Boomba.Parser.Tree
 
   Events.on_message(:on_message)
 
@@ -34,7 +36,7 @@ defmodule Boomba.Events do
   end
 
   def send_message({:ok, content}, channel_id) do
-    IO.puts(content)
+    Logger.debug("sending message: #{content}")
 
     Alchemy.Client.send_message(
       channel_id,
@@ -43,7 +45,8 @@ defmodule Boomba.Events do
   end
 
   def send_message({:error, _} = err, _message) do
-    IO.inspect(err)
+    Logger.error("error parsing message: #{inspect(err)}")
+    err
   end
 
   def is_command(content) do
@@ -52,8 +55,8 @@ defmodule Boomba.Events do
 
   def get_reply({:ok, command}, message) do
     reply =
-      Boomba.Parser.Tree.build(command.reply)
-      |> Boomba.Parser.Tree.collapse_tree(message, command)
+      Tree.build(command.reply)
+      |> Tree.collapse_tree(message, command)
 
     {:ok, reply}
   end

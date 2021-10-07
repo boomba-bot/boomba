@@ -1,4 +1,5 @@
 defmodule Boomba.Cooldown do
+  @moduledoc false
   use GenServer
 
   def start_link(_opts) do
@@ -16,7 +17,7 @@ defmodule Boomba.Cooldown do
     GenServer.call(__MODULE__, {:execute, command, user})
   end
 
-  def get_cooldowns() do
+  def get_cooldowns do
     GenServer.call(__MODULE__, {:get_cooldowns})
   end
 
