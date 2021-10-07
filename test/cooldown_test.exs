@@ -2,8 +2,8 @@ defmodule BoombaTest.Cooldown do
   use ExUnit.Case
   doctest(Boomba.Cooldown)
 
-  alias Boomba.StreamElements.Command
   alias Boomba.Cooldown
+  alias Boomba.StreamElements.Command
 
   setup_all do
     {:ok, %{command: %Command{_id: "command_id", cooldown: %{user: 5, global: 2}}}}

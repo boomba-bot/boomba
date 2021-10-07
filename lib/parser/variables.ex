@@ -1,4 +1,6 @@
 defmodule Boomba.Parser.Variables do
+  @moduledoc false
+
   def variable("sender", message, _command) do
     "<@" <> message.author.id <> ">"
   end

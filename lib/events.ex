@@ -3,8 +3,11 @@ defmodule Boomba.Events do
   Handles Alchemy Discord events
   """
   use Alchemy.Events
+  require Logger
+  alias Boomba.Parser.Tree
 
   Events.on_message(:on_message)
+
   def on_message(message) do
     if is_command(message.content) do
       parse_message(message)
@@ -33,7 +36,8 @@ defmodule Boomba.Events do
   end
 
   def send_message({:ok, content}, channel_id) do
-    IO.puts(content)
+    Logger.debug("sending message: #{content}")
+
     Alchemy.Client.send_message(
       channel_id,
       content
@@ -41,7 +45,8 @@ defmodule Boomba.Events do
   end
 
   def send_message({:error, _} = err, _message) do
-    IO.inspect(err)
+    Logger.error("error parsing message: #{inspect(err)}")
+    err
   end
 
   def is_command(content) do
@@ -49,7 +54,10 @@ defmodule Boomba.Events do
   end
 
   def get_reply({:ok, command}, message) do
-    reply = Boomba.Parser.Tree.build(command.reply) |> Boomba.Parser.Tree.collapse_tree(message, command)
+    reply =
+      Tree.build(command.reply)
+      |> Tree.collapse_tree(message, command)
+
     {:ok, reply}
   end
 
@@ -77,6 +85,7 @@ defmodule Boomba.Events do
 
   def command_from_message({:ok, commands}, message) do
     word = message.content |> String.split(" ") |> hd() |> String.replace_prefix("!", "")
+
     case Enum.find(commands, fn cmd -> word == cmd.command end) do
       nil -> {:error, %{reason: "not found"}}
       cmd -> {:ok, cmd}
