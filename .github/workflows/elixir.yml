@@ -50,7 +50,9 @@ jobs:
       uses: actions/cache@v2
       id: mix-cache
       with:
-        path: deps
+        path: |
+          deps
+          _build
         key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
     - name: Check Formatting
       run: mix format --check-formatted
@@ -71,7 +73,9 @@ jobs:
       uses: actions/cache@v2
       id: mix-cache
       with:
-        path: deps
+        path: |
+          deps
+          _build
         key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
     - name: Retrieve PLT Cache
       uses: actions/cache@v1
@@ -101,7 +105,9 @@ jobs:
       uses: actions/cache@v2
       id: mix-cache
       with:
-        path: deps
+        path: |
+          deps
+          _build
         key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
     - name: Run tests
       run: mix test --no-start
