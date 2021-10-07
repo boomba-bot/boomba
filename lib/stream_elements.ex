@@ -1,6 +1,7 @@
 defmodule Boomba.StreamElements do
   require IEx
   alias Boomba.StreamElements.Command
+
   @moduledoc """
   Get commands and other stream elements data for a guild
   """

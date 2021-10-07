@@ -5,6 +5,7 @@ defmodule Boomba.Events do
   use Alchemy.Events
 
   Events.on_message(:on_message)
+
   def on_message(message) do
     if is_command(message.content) do
       parse_message(message)
@@ -34,6 +35,7 @@ defmodule Boomba.Events do
 
   def send_message({:ok, content}, channel_id) do
     IO.puts(content)
+
     Alchemy.Client.send_message(
       channel_id,
       content
@@ -49,7 +51,10 @@ defmodule Boomba.Events do
   end
 
   def get_reply({:ok, command}, message) do
-    reply = Boomba.Parser.Tree.build(command.reply) |> Boomba.Parser.Tree.collapse_tree(message, command)
+    reply =
+      Boomba.Parser.Tree.build(command.reply)
+      |> Boomba.Parser.Tree.collapse_tree(message, command)
+
     {:ok, reply}
   end
 
@@ -77,6 +82,7 @@ defmodule Boomba.Events do
 
   def command_from_message({:ok, commands}, message) do
     word = message.content |> String.split(" ") |> hd() |> String.replace_prefix("!", "")
+
     case Enum.find(commands, fn cmd -> word == cmd.command end) do
       nil -> {:error, %{reason: "not found"}}
       cmd -> {:ok, cmd}
