@@ -1,6 +1,8 @@
 defmodule Boomba.Parser.Variables do
   @moduledoc false
 
+  use Timex
+
   def variable("sender", message) do
     "<@" <> message.author.id <> ">"
   end
@@ -17,10 +19,27 @@ defmodule Boomba.Parser.Variables do
     message.author.username
   end
 
+  def variable("time.until " <> utc_time, _message) do
+    [hours, minutes] = utc_time |> String.split(":") |> Enum.map(fn x -> String.to_integer(x) end)
+
+    Timex.now()
+    |> Timex.set(hour: hours, minute: minutes)
+    |> Timex.format!("{relative}", :relative)
+  rescue
+    _ -> "{invalid time}"
+  end
+
+  def variable("time." <> zone, _message) do
+    case zone |> String.trim() |> String.upcase() |> Timex.now() do
+      {:error, _} -> "{invalid timezone}"
+      date -> date |> Timex.format!("{h24}:{m}")
+    end
+  end
+
   def variable("touser", message) do
     case message.content
-    |> String.split(" ")
-    |> Enum.at(1) do
+         |> String.split(" ")
+         |> Enum.at(1) do
       nil -> "<@#{message.author.id}>"
       content -> content
     end

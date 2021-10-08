@@ -56,7 +56,7 @@ defmodule Boomba.Events do
   def get_reply({:ok, command}, message) do
     reply =
       Tree.build(command.reply)
-      |> Tree.collapse_tree(message, command)
+      |> Tree.collapse_tree(message)
 
     {:ok, reply}
   end

@@ -39,8 +39,18 @@ defmodule BoombaTest.Parser.Variables do
     assert reply == state.message.content |> String.split(" ") |> Enum.at(1)
   end
 
-  test "touser without args", state do
+  test "touser without args" do
     reply = Variables.variable("touser", %{author: %{id: "user_id"}, content: "!cmd"})
     assert reply == "<@user_id>"
+  end
+
+  test "time.TIMEZONE", state do
+    reply = Variables.variable("time.CET", state.message)
+    assert reply |> String.split(":") |> Enum.count() == 2
+  end
+
+  test "time.until", state do
+    reply = Variables.variable("time.until 19:25", state.message)
+    assert reply != "{invalid time}"
   end
 end
