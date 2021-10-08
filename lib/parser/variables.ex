@@ -46,13 +46,18 @@ defmodule Boomba.Parser.Variables do
   end
 
   def variable("random.pick " <> options, _message) do
-    options
-    |> String.split(" ")
-    |> Enum.random()
-    |> String.replace_prefix("'", "")
-    |> String.replace_suffix("'", "")
-    |> String.replace_prefix("\"", "")
-    |> String.replace_suffix("\"", "")
+    quoted_options =
+      Regex.scan(~r/'(?:[^'\\]|\\.)*'/, options)
+      |> List.flatten()
+
+    if Enum.empty?(quoted_options) do
+      options |> String.split(" ") |> Enum.random()
+    else
+      quoted_options
+      |> Enum.random()
+      |> String.replace_prefix("'", "")
+      |> String.replace_suffix("'", "")
+    end
   end
 
   def variable("random." <> range, _message) do

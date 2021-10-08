@@ -1,6 +1,6 @@
 defmodule BoombaTest.Parser.Variables do
   use ExUnit.Case
-  alias Boomba.Parser.{Tree, Variables}
+  alias Boomba.Parser.Variables
   doctest(Boomba.Parser.Variables)
 
   setup_all do
