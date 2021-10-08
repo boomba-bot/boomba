@@ -3,6 +3,8 @@ defmodule Boomba.Parser.Variables do
 
   use Timex
 
+  alias Boomba.Services.Twitter
+
   def variable("sender", message) do
     "<@" <> message.author.id <> ">"
   end
@@ -33,6 +35,19 @@ defmodule Boomba.Parser.Variables do
     case zone |> String.trim() |> String.upcase() |> Timex.now() do
       {:error, _} -> "{invalid timezone}"
       date -> date |> Timex.format!("{h24}:{m}")
+    end
+  end
+
+  def variable("lasttweet." <> user, _message) do
+    case Twitter.username_to_id(user) do
+      {:ok, id} ->
+        case Twitter.last_tweet(id) do
+          {:ok, tweet} -> Twitter.tweet_id_to_url(Map.get(tweet, "id"), user)
+          {:error, _} -> "no tweets found for #{user}"
+        end
+
+      {:error, _} ->
+        "could not fetch tweets for #{user}"
     end
   end
 
