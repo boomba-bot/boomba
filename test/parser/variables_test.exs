@@ -53,4 +53,9 @@ defmodule BoombaTest.Parser.Variables do
     reply = Variables.variable("time.until 19:25", state.message)
     assert reply != "{invalid time}"
   end
+
+  test "urlfetch", state do
+    reply = Variables.variable("urlfetch https://wttr.in/antwerp", state.message)
+    assert reply |> String.contains?("Weather report: antwerp")
+  end
 end

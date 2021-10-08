@@ -86,6 +86,13 @@ defmodule Boomba.Parser.Variables do
     |> String.trim()
   end
 
+  def variable("urlfetch " <> url, _message) do
+    case HTTPoison.get(url, [], timeout: 5000, recv_timeout: 5000, follow_redirect: true) do
+      {:ok, %HTTPoison.Response{body: body}} -> body |> String.slice(0..100)
+      {:error, _} -> "{server error}"
+    end
+  end
+
   def variable("args", _message) do
     "args"
   end
