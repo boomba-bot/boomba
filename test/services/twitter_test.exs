@@ -14,8 +14,8 @@ defmodule BoombaTest.Services.Twitter do
     {:ok, id} = Twitter.username_to_id("Annie_Dro")
 
     case Twitter.last_tweet(id) do
-      {:ok, tweet} -> assert true
-      {:error, error} -> error == "could not get latest tweets of user"
+      {:ok, _} -> assert true
+      {:error, error} -> assert error == "could not get latest tweets of user"
     end
   end
 end

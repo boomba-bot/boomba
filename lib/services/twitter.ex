@@ -33,7 +33,7 @@ defmodule Boomba.Services.Twitter do
       {:ok, %HTTPoison.Response{body: body, status_code: 200}} ->
         body = Poison.decode!(body)
 
-        if Map.has_key?(body, "error") do
+        if Map.has_key?(body, "error") or Map.has_key?(body, "errors") do
           {:error, %{message: "could not get latest tweets of user", reason: body}}
         else
           tweets =
