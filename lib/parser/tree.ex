@@ -40,7 +40,7 @@ defmodule Boomba.Parser.Tree do
             acc <> Variables.variable(r, message)
 
         {c} ->
-          "" <> Variables.variable(c, message)
+          Variables.variable(c, message) <> acc
       end
     end)
   end
