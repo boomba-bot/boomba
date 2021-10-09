@@ -3,7 +3,7 @@ defmodule Boomba.Parser.Variables do
 
   use Timex
 
-  alias Boomba.Services.Twitter
+  alias Boomba.Services.{StreamElements, Twitter}
 
   def variable("sender", message) do
     "<@" <> message.author.id <> ">"
@@ -19,6 +19,20 @@ defmodule Boomba.Parser.Variables do
 
   def variable("user.name", message) do
     message.author.username
+  end
+
+  def variable("channel", message) do
+    {:ok, guild_id} = Alchemy.Cache.guild_id(message.channel_id)
+    {:ok, se_id} = StreamElements.id_for_guild(guild_id)
+    {:ok, channel} = StreamElements.channel(se_id)
+    Map.get(channel, "username")
+  end
+
+  def variable("channel.display_name", message) do
+    {:ok, guild_id} = Alchemy.Cache.guild_id(message.channel_id)
+    {:ok, se_id} = StreamElements.id_for_guild(guild_id)
+    {:ok, channel} = StreamElements.channel(se_id)
+    Map.get(channel, "displayName")
   end
 
   def variable("time.until " <> utc_time, _message) do
@@ -70,8 +84,8 @@ defmodule Boomba.Parser.Variables do
     else
       quoted_options
       |> Enum.random()
-      |> String.replace_prefix("'", "")
-      |> String.replace_suffix("'", "")
+      |> String.replace_prefix(~s('), "")
+      |> String.replace_suffix(~s('), "")
     end
   end
 
