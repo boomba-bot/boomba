@@ -4,7 +4,7 @@ defmodule BoombaTest.Parser.Variables do
   doctest(Boomba.Parser.Variables)
 
   setup_all do
-    {:ok, %{message: %{author: %{id: "168706817348730881"}, content: "!cmd arg1 arg2 arg3"}}}
+    {:ok, %{message: %{author: %{id: "168706817348730881"}, content: "!cmd arg1 arg2 arg3 arg4"}}}
   end
 
   test "sender/source", state do
@@ -56,6 +56,21 @@ defmodule BoombaTest.Parser.Variables do
 
   test "urlfetch", state do
     reply = Variables.variable("urlfetch https://wttr.in/antwerp", state.message)
-    assert reply |> String.contains?("Weather report: antwerp")
+    assert reply != "{server error}"
+  end
+
+  test "arg skip", state do
+    reply = Variables.variable("2:", state.message)
+    assert reply == "arg2 arg3 arg4"
+  end
+
+  test "arg range", state do
+    reply = Variables.variable("2:3", state.message)
+    assert reply == "arg2 arg3"
+  end
+
+  test "arg", state do
+    reply = Variables.variable("2", state.message)
+    assert reply == "arg2"
   end
 end

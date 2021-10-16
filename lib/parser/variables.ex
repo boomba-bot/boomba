@@ -5,7 +5,6 @@ defmodule Boomba.Parser.Variables do
 
   alias Boomba.Services.{StreamElements, Twitter}
 
-  @spec variable(any, any) :: any
   def variable("sender", message) do
     "<@" <> message.author.id <> ">"
   end
@@ -105,9 +104,11 @@ defmodule Boomba.Parser.Variables do
   def variable("random.chatter", message) do
     {:ok, guild_id} = Alchemy.Cache.guild_id(message.channel_id)
     {:ok, guild} = Alchemy.Cache.guild(guild_id)
-    if guild.members not nil and !Enum.empty?(guild.members) do
+
+    if guild.members(not nil and !Enum.empty?(guild.members)) do
       member = guild.members |> Enum.random()
-      if member.nick not nil do
+
+      if member.nick(not nil) do
         member.nick
       else
         member.user.username
@@ -170,7 +171,32 @@ defmodule Boomba.Parser.Variables do
     "count"
   end
 
-  def variable(content, _message) do
-    content
+  # arg variables cannot be pattern matched thus they need to be regexed in the catch-all clause
+  def variable(content, message) do
+    # arg range
+    case Regex.run(~r/\d+:(\d+)?/, content) do
+      [match | _] ->
+        start_index = (match |> String.split(":") |> Enum.at(0) |> String.to_integer()) - 1
+
+        if match |> String.split(":") |> Enum.at(1) == "" do
+          [_ | items] = message.content |> String.split(" ")
+          items |> Enum.take(-(Enum.count(items) - start_index)) |> Enum.join(" ")
+        else
+          end_index = (match |> String.split(":") |> Enum.at(1) |> String.to_integer()) - 1
+          [_ | items] = message.content |> String.split(" ")
+          Enum.slice(items, start_index..end_index) |> Enum.join(" ")
+        end
+
+      nil ->
+        # ${args}
+        case Regex.run(~r/\d+/, content) do
+          [match] ->
+            index = String.to_integer(match) - 1
+            message.content |> String.split(" ") |> List.delete_at(0) |> Enum.at(index)
+
+          nil ->
+            content
+        end
+    end
   end
 end
