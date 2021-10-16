@@ -5,6 +5,7 @@ defmodule Boomba.Parser.Variables do
 
   alias Boomba.Services.{StreamElements, Twitter}
 
+  @spec variable(any, any) :: any
   def variable("sender", message) do
     "<@" <> message.author.id <> ">"
   end
@@ -86,6 +87,18 @@ defmodule Boomba.Parser.Variables do
       |> Enum.random()
       |> String.replace_prefix(~s('), "")
       |> String.replace_suffix(~s('), "")
+    end
+  end
+
+  def variable("random.emote", message) do
+    {:ok, guild_id} = Alchemy.Cache.guild_id(message.channel_id)
+    {:ok, guild} = Alchemy.Cache.guild(guild_id)
+
+    try do
+      emoji = guild.emojis |> Enum.random()
+      "#{emoji}"
+    rescue
+      Enum.EmptyError -> "{no_emojis_available}"
     end
   end
 
