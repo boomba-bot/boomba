@@ -102,6 +102,21 @@ defmodule Boomba.Parser.Variables do
     end
   end
 
+  def variable("random.chatter", message) do
+    {:ok, guild_id} = Alchemy.Cache.guild_id(message.channel_id)
+    {:ok, guild} = Alchemy.Cache.guild(guild_id)
+    if guild.members not nil and !Enum.empty?(guild.members) do
+      member = guild.members |> Enum.random()
+      if member.nick not nil do
+        member.nick
+      else
+        member.user.username
+      end
+    else
+      "{no_members_available}"
+    end
+  end
+
   def variable("random." <> range, _message) do
     [lower, upper] =
       range |> String.trim() |> (&Regex.split(~r{-}, &1)).() |> Enum.map(&String.to_integer(&1))
