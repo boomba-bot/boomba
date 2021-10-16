@@ -1,5 +1,6 @@
-defmodule Boomba.StreamElements do
+defmodule Boomba.StreamElements.Commands do
   require IEx
+  alias Boomba.Services.StreamElements
   alias Boomba.StreamElements.Command
 
   @moduledoc """
@@ -51,7 +52,6 @@ defmodule Boomba.StreamElements do
     headers = [Authorization: "Bearer #{token}"]
 
     case get_url(guild_id) do
-      {:error, reason} -> {:error, reason}
       url -> HTTPoison.get(url, headers) |> parse_response()
     end
   end
@@ -73,20 +73,9 @@ defmodule Boomba.StreamElements do
   end
 
   defp get_url(guild_id) do
-    case Map.fetch(se_ids(), guild_id) do
+    case StreamElements.id_for_guild(guild_id) do
       {:ok, value} ->
         "https://api.streamelements.com/kappa/v2/bot/commands/#{value}"
-
-      :error ->
-        {:error, "stream elements id not found"}
     end
-  end
-
-  defp se_ids do
-    %{
-      "406167664596090883" => "5dd5683a71f3d374753a06c5",
-      "793834847214501898" => "5dd5683a71f3d374753a06c5",
-      "662462923905433610" => "5dd5683a71f3d374753a06c5"
-    }
   end
 end

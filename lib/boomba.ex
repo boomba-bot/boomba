@@ -6,7 +6,7 @@ defmodule Boomba do
 
   def start(_type, _args) do
     children = [
-      Boomba.StreamElements,
+      Boomba.StreamElements.Commands,
       Boomba.Cooldown
     ]
 

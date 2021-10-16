@@ -5,6 +5,7 @@ defmodule Boomba.Events do
   use Alchemy.Events
   require Logger
   alias Boomba.Parser.Tree
+  alias Boomba.StreamElements.Commands
 
   Events.on_message(:on_message)
 
@@ -27,7 +28,7 @@ defmodule Boomba.Events do
   def cooldown({:ok, command}, message) do
     case Boomba.Cooldown.execute(command, message.author.id) do
       :ok -> {:ok, command}
-      _ -> {:error, "commnad is on cooldown"}
+      _ -> {:error, "command is on cooldown"}
     end
   end
 
@@ -56,7 +57,7 @@ defmodule Boomba.Events do
   def get_reply({:ok, command}, message) do
     reply =
       Tree.build(command.reply)
-      |> Tree.collapse_tree(message, command)
+      |> Tree.collapse_tree(message)
 
     {:ok, reply}
   end
@@ -80,7 +81,7 @@ defmodule Boomba.Events do
 
   def get_guild_commands(message) do
     {:ok, guild_id} = guild_for_message(message)
-    Boomba.StreamElements.get_commands(guild_id)
+    Commands.get_commands(guild_id)
   end
 
   def command_from_message({:ok, commands}, message) do

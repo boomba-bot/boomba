@@ -30,17 +30,17 @@ defmodule Boomba.Parser.Tree do
     end
   end
 
-  def collapse_tree(tree, message, command) do
+  def collapse_tree(tree, message) do
     tree
     |> Enum.reverse()
     |> Enum.reduce("", fn el, acc ->
       case el do
         {l, r} ->
-          Variables.variable(l, message, command) <>
-            acc <> Variables.variable(r, message, command)
+          Variables.variable(l, message) <>
+            acc <> Variables.variable(r, message)
 
         {c} ->
-          "" <> Variables.variable(c, message, command)
+          Variables.variable(c, message) <> acc
       end
     end)
   end

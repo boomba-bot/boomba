@@ -110,4 +110,6 @@ jobs:
           _build
         key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
     - name: Run tests
+      env:
+        TWITTER_BEARER: ${{ secrets.TWITTER_BEARER }}
       run: mix test --no-start
