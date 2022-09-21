@@ -33,7 +33,7 @@ defmodule Boomba.StreamElements do
 
       [] ->
         case get_commands_from_api(guild_id) do
-          :error ->
+          {:error, _} ->
             {:reply, :error, table}
 
           commands ->
@@ -60,7 +60,7 @@ defmodule Boomba.StreamElements do
   end
 
   defp parse_response({:ok, %HTTPoison.Response{status_code: 404}}) do
-    :notfound
+    {:error, :notfound}
   end
 
   defp parse_response({:ok, response}) do

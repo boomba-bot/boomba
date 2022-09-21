@@ -47,4 +47,14 @@ defmodule BoombaTest.Parser do
     {:ok, reply} = Parser.parse(state.message, %{"reply" => "${repeat 3 word }"})
     assert reply == "word word word"
   end
+
+  test "repeat nimble", state do
+    result = Boomba.NimbleParser.repeat("ooga ${repeat 3 word} booga")
+    IO.puts(result);
+  end
+
+  test "nested repeat nimble", state do
+    result = Boomba.NimbleParser.repeat("ooga ${repeat 3 ${repeat 2 word}} booga")
+    IO.puts(result);
+  end
 end

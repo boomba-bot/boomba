@@ -1,3 +1,13 @@
+defmodule Boomba.NimbleParser do
+  import NimbleParsec
+
+  repeat =
+    eventually(string("${"))
+    |> eventually(string("}"))
+
+  defparsec :repeat, repeat
+end
+
 defmodule Boomba.Parser do
   @moduledoc """
   Parses stream element commands

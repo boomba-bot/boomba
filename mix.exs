@@ -32,6 +32,7 @@ defmodule Boomba.MixProject do
     [
       {:alchemy, "~> 0.7.0", hex: :discord_alchemy},
       {:httpoison, "~> 1.8"},
+      {:nimble_parsec, "~> 1.1.0", hex: :nimble_parsec},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
